@@ -1,0 +1,4 @@
+name: AdvancedRepeaters
+main: org.inventivetalent.advancedrepeaters.AdvancedRepeaters
+author: inventivetalent
+version: ${project.version}
