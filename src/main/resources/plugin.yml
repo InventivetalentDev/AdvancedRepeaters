@@ -2,3 +2,4 @@ name: AdvancedRepeaters
 main: org.inventivetalent.advancedrepeaters.AdvancedRepeaters
 author: inventivetalent
 version: ${project.version}
+api-version: 1.13
