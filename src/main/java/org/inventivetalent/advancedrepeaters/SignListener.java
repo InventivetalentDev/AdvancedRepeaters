@@ -5,6 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.type.Repeater;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -18,7 +19,7 @@ public class SignListener implements Listener {
 		Bukkit.getScheduler().runTaskLater(AdvancedRepeaters.instance, new Runnable() {
 			@Override
 			public void run() {
-				if (event.getBlock().getType() == Material.SIGN_POST || event.getBlock().getType() == Material.WALL_SIGN) {
+				if (event.getBlock().getType() == Material.SIGN || event.getBlock().getType() == Material.WALL_SIGN) {
 					Sign sign = (Sign) event.getBlock().getState();
 					if (AdvancedRepeaters.SIGN_TITLE.equalsIgnoreCase(sign.getLine(0))) {
 						if (!event.getPlayer().hasPermission("advancedrepeaters.create")) {
@@ -32,7 +33,7 @@ public class SignListener implements Listener {
 						BlockFace[] faces = new BlockFace[] { BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.DOWN };
 						for (BlockFace face : faces) {
 							Block relative = event.getBlock().getRelative(face);
-							if (relative.getType() == Material.DIODE_BLOCK_ON || relative.getType() == Material.DIODE_BLOCK_OFF) {
+							if (relative.getType() == Material.REPEATER) {
 								targetRepeater = relative;
 							}
 						}

@@ -1,9 +1,11 @@
 package org.inventivetalent.advancedrepeaters;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.type.Repeater;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockRedstoneEvent;
@@ -15,10 +17,9 @@ public class RedstoneListener implements Listener {
 
 	@EventHandler
 	public void onBlockRedstone(final BlockRedstoneEvent event) {
-		if (event.getBlock().getType() == Material.DIODE_BLOCK_OFF || event.getBlock().getType() == Material.DIODE_BLOCK_ON) {
-			final boolean on = (event.getBlock().getType() == Material.DIODE_BLOCK_ON);
+		if (event.getBlock().getType() == Material.REPEATER) {
+			final boolean on = ((Repeater) event.getBlock().getBlockData()).isPowered();
 			SignData data = collectSignData(event.getBlock());
-			final byte prevData = event.getBlock().getData();
 			long parsedTicks = data.value;
 			final Sign sign = data.block;
 			if (sign == null) { return; }
@@ -26,11 +27,11 @@ public class RedstoneListener implements Listener {
 				BukkitRunnable runnable = new BukkitRunnable() {
 					@Override
 					public void run() {
-						if (on && (event.getBlock().getType() == Material.DIODE_BLOCK_ON)) {
-							event.getBlock().setTypeIdAndData(Material.DIODE_BLOCK_OFF.getId(), prevData, true);
-						} else if (!on && (event.getBlock().getType() == Material.DIODE_BLOCK_OFF && event.getBlock().isBlockPowered())) {
-							event.getBlock().setTypeIdAndData(Material.DIODE_BLOCK_ON.getId(), prevData, true);
-						}
+
+						Repeater repeater = ((Repeater) event.getBlock().getBlockData());
+						repeater.setPowered(!on);
+						event.getBlock().setBlockData(repeater, true);
+
 						sign.setLine(3, null);
 						sign.update();
 					}
@@ -54,7 +55,7 @@ public class RedstoneListener implements Listener {
 		BlockFace[] faces = new BlockFace[] { BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.UP };
 		for (BlockFace face : faces) {
 			Block relative = origin.getRelative(face);
-			if (relative.getType() == Material.SIGN_POST || relative.getType() == Material.WALL_SIGN) {
+			if (relative.getType() == Material.SIGN || relative.getType() == Material.WALL_SIGN) {
 				Sign sign = (Sign) relative.getState();
 				data.block = sign;
 				String[] lines = sign.getLines();
