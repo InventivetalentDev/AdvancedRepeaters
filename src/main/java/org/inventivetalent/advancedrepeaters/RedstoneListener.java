@@ -27,7 +27,7 @@ public class RedstoneListener implements Listener {
 					@Override
 					public void run() {
 
-						Repeater repeater = ((Repeater) event.getBlock().getBlockData());
+						Repeater repeater = (Repeater) event.getBlock().getBlockData();
 						repeater.setPowered(!on);
 						event.getBlock().setBlockData(repeater, true);
 
