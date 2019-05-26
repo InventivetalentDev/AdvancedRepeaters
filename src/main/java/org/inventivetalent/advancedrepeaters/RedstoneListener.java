@@ -31,7 +31,7 @@ public class RedstoneListener implements Listener {
 						repeater.setPowered(!on);
 						event.getBlock().setBlockData(repeater, true);
 
-						sign.setLine(3, null);
+						sign.setLine(3, "");
 						sign.update();
 					}
 				};
