@@ -18,7 +18,7 @@ public class SignListener implements Listener {
 		Bukkit.getScheduler().runTaskLater(AdvancedRepeaters.instance, new Runnable() {
 			@Override
 			public void run() {
-				if (event.getBlock().getType() == Material.SIGN || event.getBlock().getType() == Material.WALL_SIGN) {
+				if (event.getBlock().getState() instanceof Sign) {
 					Sign sign = (Sign) event.getBlock().getState();
 					if (AdvancedRepeaters.SIGN_TITLE.equalsIgnoreCase(sign.getLine(0))) {
 						if (!event.getPlayer().hasPermission("advancedrepeaters.create")) {
