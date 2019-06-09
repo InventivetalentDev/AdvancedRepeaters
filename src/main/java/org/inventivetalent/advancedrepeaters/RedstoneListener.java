@@ -54,7 +54,7 @@ public class RedstoneListener implements Listener {
 		BlockFace[] faces = new BlockFace[] { BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.UP };
 		for (BlockFace face : faces) {
 			Block relative = origin.getRelative(face);
-			if (relative.getType() == Material.SIGN || relative.getType() == Material.WALL_SIGN) {
+			if (relative.getState() instanceof Sign) {
 				Sign sign = (Sign) relative.getState();
 				data.block = sign;
 				String[] lines = sign.getLines();
