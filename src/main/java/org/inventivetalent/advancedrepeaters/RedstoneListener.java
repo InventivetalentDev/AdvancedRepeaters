@@ -19,8 +19,8 @@ public class RedstoneListener implements Listener {
 		if (event.getBlock().getType() == Material.REPEATER) {
 			final boolean on = ((Repeater) event.getBlock().getBlockData()).isPowered();
 			SignData data = collectSignData(event.getBlock());
-			long parsedTicksActive = data.valueActive;
-			long parsedTicksInactive = data.valueInactive;
+			long parsedTicksActive = data.valueIn;
+			long parsedTicksInactive = data.valueOut;
 			final Sign sign = data.block;
 			if (sign == null) { return; }
 			if (parsedTicksActive >= 0) {
@@ -42,7 +42,7 @@ public class RedstoneListener implements Listener {
 
 				if (parsedTicksActive > 0) {
 					event.setNewCurrent(on ? 15 : 0);
-					runnable.runTaskLater(AdvancedRepeaters.instance, !on ? parsedTicksActive : parsedTicksInactive);
+					runnable.runTaskLater(AdvancedRepeaters.instance, on && data.valueOut > -1 ? parsedTicksInactive : parsedTicksActive);
 				} else {
 					runnable.run();
 				}
@@ -61,25 +61,18 @@ public class RedstoneListener implements Listener {
 				String[] lines = sign.getLines();
 				if (!AdvancedRepeaters.SIGN_TITLE_FORMAT.equalsIgnoreCase(lines[0])) { continue; }
 
-				for (int i = 1; i < 3; i++ ) {
-					String line = lines[i];
+				if (lines[1].length() > 0) data.valueIn = TickType.parseTicks(lines[1]);
+				if (lines[2].length() > 0) data.valueOut = TickType.parseTicks(lines[2]);
 
-					if (line.length() > 0) {
-						if (data.valueActive == -1) {
-							data.valueActive = TickType.parseTicks(line);
-						} else if (data.valueInactive == -1) {
-							data.valueInactive = TickType.parseTicks(line);
-						}
-					}
-				}
+				return data;
 			}
 		}
 		return data;
 	}
 
 	static class SignData {
-		long valueActive = -1;
-		long valueInactive = -1;
+		long valueIn = -1;
+		long valueOut = -1;
 		Sign block;
 	}
 
