@@ -19,11 +19,11 @@ public class RedstoneListener implements Listener {
 		if (event.getBlock().getType() == Material.REPEATER) {
 			final boolean on = ((Repeater) event.getBlock().getBlockData()).isPowered();
 			SignData data = collectSignData(event.getBlock());
-			long parsedTicksActive = data.valueIn;
-			long parsedTicksInactive = data.valueOut;
+			long parsedTicksIn = data.valueIn;
+			long parsedTicksOut = data.valueOut;
 			final Sign sign = data.block;
 			if (sign == null) { return; }
-			if (parsedTicksActive >= 0) {
+			if (parsedTicksIn >= 0) {
 				BukkitRunnable runnable = new BukkitRunnable() {
 					@Override
 					public void run() {
@@ -40,9 +40,9 @@ public class RedstoneListener implements Listener {
 				sign.setLine(3, RUNNING_PLACEHOLDER);
 				sign.update();
 
-				if (parsedTicksActive > 0) {
+				if (parsedTicksIn > 0) {
 					event.setNewCurrent(on ? 15 : 0);
-					runnable.runTaskLater(AdvancedRepeaters.instance, on && data.valueOut > -1 ? parsedTicksInactive : parsedTicksActive);
+					runnable.runTaskLater(AdvancedRepeaters.instance, on && data.valueOut > -1 ? parsedTicksOut : parsedTicksIn);
 				} else {
 					runnable.run();
 				}
