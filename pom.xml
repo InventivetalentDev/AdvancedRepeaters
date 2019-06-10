@@ -48,9 +48,17 @@
                         <configuration>
                             <artifactSet>
                                 <includes>
+                                    <include>org.bstats:**</include>
                                     <include>org.inventivetalent:advancedrepeaters**</include>
                                 </includes>
                             </artifactSet>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.bstats</pattern>
+                                    <!-- Replace this with your package! -->
+                                    <shadedPattern>your.package</shadedPattern>
+                                </relocation>
+                            </relocations>
                         </configuration>
                     </execution>
                 </executions>
@@ -76,6 +84,12 @@
             <version>1.14-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>1.5</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <repositories>
@@ -98,6 +112,10 @@
         <repository>
             <id>sk89q-repo</id>
             <url>http://maven.sk89q.com/artifactory/repo/</url>
+        </repository>
+        <repository>
+            <id>CodeMC</id>
+            <url>https://repo.codemc.org/repository/maven-public</url>
         </repository>
     </repositories>
 

@@ -1,5 +1,6 @@
 package org.inventivetalent.advancedrepeaters;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,5 +17,7 @@ public class AdvancedRepeaters extends JavaPlugin {
 
 		Bukkit.getPluginManager().registerEvents(new RedstoneListener(), this);
 		Bukkit.getPluginManager().registerEvents(new SignListener(), this);
+
+		new Metrics(this);
 	}
 }
