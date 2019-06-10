@@ -17,7 +17,6 @@ public class RedstoneListener implements Listener {
 	@EventHandler
 	public void onBlockRedstone(final BlockRedstoneEvent event) {
 		if (event.getBlock().getType() == Material.REPEATER) {
-			System.out.println("Fired!");
 			final boolean on = ((Repeater) event.getBlock().getBlockData()).isPowered();
 			SignData data = collectSignData(event.getBlock());
 			long parsedTicksActive = data.valueActive;
