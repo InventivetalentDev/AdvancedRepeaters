@@ -17,7 +17,15 @@ public class RedstoneListener implements Listener {
 	@EventHandler
 	public void onBlockRedstone(final BlockRedstoneEvent event) {
 		if (event.getBlock().getType() == Material.REPEATER) {
-			final boolean on = ((Repeater) event.getBlock().getBlockData()).isPowered();
+			final boolean inputIsOn = event.getBlock().getBlockPower()>0;
+			final boolean selfIsOn = ((Repeater)event.getBlock().getBlockData()).isPowered();
+			final boolean eventIsOn = event.getOldCurrent() > 0;
+
+			// helpful for debugging
+//			System.out.println("Triggered and is " + (!(((Repeater)event.getBlock().getBlockData()).isPowered()) ? "NOT" : "") + " powered");
+//			System.out.println("with current of "+event.getOldCurrent()+" > "+event.getNewCurrent());
+//			System.out.println("and block power of "+event.getBlock().getBlockPower());
+
 			SignData data = collectSignData(event.getBlock());
 			long parsedTicksIn = data.valueIn;
 			long parsedTicksOut = data.valueOut;
@@ -27,9 +35,8 @@ public class RedstoneListener implements Listener {
 				BukkitRunnable runnable = new BukkitRunnable() {
 					@Override
 					public void run() {
-
 						Repeater repeater = (Repeater) event.getBlock().getBlockData();
-						repeater.setPowered(!on);
+						repeater.setPowered(inputIsOn&&!eventIsOn);
 						event.getBlock().setBlockData(repeater, true);
 
 						sign.setLine(3, "");
@@ -41,8 +48,8 @@ public class RedstoneListener implements Listener {
 				sign.update();
 
 				if (parsedTicksIn > 0) {
-					event.setNewCurrent(on ? 15 : 0);
-					runnable.runTaskLater(AdvancedRepeaters.instance, on && data.valueOut > -1 ? parsedTicksOut : parsedTicksIn);
+					event.setNewCurrent(event.getOldCurrent());
+					runnable.runTaskLater(AdvancedRepeaters.instance, parsedTicksIn);
 				} else {
 					runnable.run();
 				}
