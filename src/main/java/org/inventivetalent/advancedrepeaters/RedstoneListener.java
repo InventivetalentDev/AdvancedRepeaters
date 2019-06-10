@@ -17,14 +17,14 @@ public class RedstoneListener implements Listener {
 	@EventHandler
 	public void onBlockRedstone(final BlockRedstoneEvent event) {
 		if (event.getBlock().getType() == Material.REPEATER) {
-			final boolean inputIsOn = event.getBlock().getBlockPower()>0;
-			final boolean selfIsOn = ((Repeater)event.getBlock().getBlockData()).isPowered();
+			final boolean inputIsOn = event.getBlock().getBlockPower() > 0;
+			final boolean selfIsOn = ((Repeater) event.getBlock().getBlockData()).isPowered();
 			final boolean eventIsOn = event.getOldCurrent() > 0;
 
 			// helpful for debugging
-//			System.out.println("Triggered and is " + (!(((Repeater)event.getBlock().getBlockData()).isPowered()) ? "NOT" : "") + " powered");
-//			System.out.println("with current of "+event.getOldCurrent()+" > "+event.getNewCurrent());
-//			System.out.println("and block power of "+event.getBlock().getBlockPower());
+			//System.out.println("Triggered and is " + (!(((Repeater)event.getBlock().getBlockData()).isPowered()) ? "NOT" : "") + " powered");
+			//System.out.println("with current of "+event.getOldCurrent()+" > "+event.getNewCurrent());
+			//System.out.println("and block power of "+event.getBlock().getBlockPower());
 
 			SignData data = collectSignData(event.getBlock());
 			long parsedTicksIn = data.valueIn;
@@ -36,7 +36,7 @@ public class RedstoneListener implements Listener {
 					@Override
 					public void run() {
 						Repeater repeater = (Repeater) event.getBlock().getBlockData();
-						repeater.setPowered(inputIsOn&&!eventIsOn);
+						repeater.setPowered(inputIsOn && !eventIsOn);
 						event.getBlock().setBlockData(repeater, true);
 
 						sign.setLine(3, "");
@@ -68,8 +68,8 @@ public class RedstoneListener implements Listener {
 				String[] lines = sign.getLines();
 				if (!AdvancedRepeaters.SIGN_TITLE_FORMAT.equalsIgnoreCase(lines[0])) { continue; }
 
-				if (lines[1].length() > 0) data.valueIn = TickType.parseTicks(lines[1]);
-				if (lines[2].length() > 0) data.valueOut = TickType.parseTicks(lines[2]);
+				if (lines[1].length() > 0) { data.valueIn = TickType.parseTicks(lines[1]); }
+				if (lines[2].length() > 0) { data.valueOut = TickType.parseTicks(lines[2]); }
 
 				return data;
 			}
@@ -78,7 +78,7 @@ public class RedstoneListener implements Listener {
 	}
 
 	static class SignData {
-		long valueIn = -1;
+		long valueIn  = -1;
 		long valueOut = -1;
 		Sign block;
 	}
