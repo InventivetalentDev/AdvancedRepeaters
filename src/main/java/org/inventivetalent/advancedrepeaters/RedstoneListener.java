@@ -17,12 +17,14 @@ public class RedstoneListener implements Listener {
 	@EventHandler
 	public void onBlockRedstone(final BlockRedstoneEvent event) {
 		if (event.getBlock().getType() == Material.REPEATER) {
+			System.out.println("Fired!");
 			final boolean on = ((Repeater) event.getBlock().getBlockData()).isPowered();
 			SignData data = collectSignData(event.getBlock());
-			long parsedTicks = data.value;
+			long parsedTicksActive = data.valueActive;
+			long parsedTicksInactive = data.valueInactive;
 			final Sign sign = data.block;
 			if (sign == null) { return; }
-			if (parsedTicks >= 0) {
+			if (parsedTicksActive >= 0) {
 				BukkitRunnable runnable = new BukkitRunnable() {
 					@Override
 					public void run() {
@@ -39,9 +41,9 @@ public class RedstoneListener implements Listener {
 				sign.setLine(3, RUNNING_PLACEHOLDER);
 				sign.update();
 
-				if (parsedTicks > 0) {
+				if (parsedTicksActive > 0) {
 					event.setNewCurrent(on ? 15 : 0);
-					runnable.runTaskLater(AdvancedRepeaters.instance, parsedTicks);
+					runnable.runTaskLater(AdvancedRepeaters.instance, !on ? parsedTicksActive : parsedTicksInactive);
 				} else {
 					runnable.run();
 				}
@@ -60,12 +62,15 @@ public class RedstoneListener implements Listener {
 				String[] lines = sign.getLines();
 				if (!AdvancedRepeaters.SIGN_TITLE_FORMAT.equalsIgnoreCase(lines[0])) { continue; }
 
-				for (String s : lines) {
-					if (s == null || s.isEmpty()) { continue; }
-					try {
-						data.value = TickType.parseTicks(s);
-						return data;
-					} catch (Exception e) {
+				for (int i = 1; i < 3; i++ ) {
+					String line = lines[i];
+
+					if (line.length() > 0) {
+						if (data.valueActive == -1) {
+							data.valueActive = TickType.parseTicks(line);
+						} else if (data.valueInactive == -1) {
+							data.valueInactive = TickType.parseTicks(line);
+						}
 					}
 				}
 			}
@@ -74,7 +79,8 @@ public class RedstoneListener implements Listener {
 	}
 
 	static class SignData {
-		long value = -1;
+		long valueActive = -1;
+		long valueInactive = -1;
 		Sign block;
 	}
 
